@@ -1,4 +1,4 @@
 package tn.esprit.projetsalledemarche.Repository;
 
-public class CertificationRepository {
+public interface CertificationRepository {
 }

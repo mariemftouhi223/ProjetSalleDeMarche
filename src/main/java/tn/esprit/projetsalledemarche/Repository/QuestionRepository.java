@@ -1,4 +1,4 @@
 package tn.esprit.projetsalledemarche.Repository;
 
-public class QuestionRepository {
+public interface QuestionRepository {
 }
