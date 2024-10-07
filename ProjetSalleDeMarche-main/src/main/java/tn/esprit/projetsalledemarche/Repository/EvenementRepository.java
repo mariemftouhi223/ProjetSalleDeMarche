@@ -1,4 +1,9 @@
 package tn.esprit.projetsalledemarche.Repository;
 
-public interface EvenementRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
+import tn.esprit.projetsalledemarche.Entity.Evenement;
+
+public interface EvenementRepository  extends JpaRepository<Evenement,Integer> {
 }
