@@ -1,11 +1,10 @@
 package tn.esprit.projetsalledemarche.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Date;
 
 @Entity
 @Getter
@@ -17,5 +16,10 @@ import lombok.experimental.FieldDefaults;
 public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
+    private String titre;
+    private Date datecreation;
+    @ManyToOne
+    @JoinColumn(name = "cours_id")
+    private Cours cours;
 }

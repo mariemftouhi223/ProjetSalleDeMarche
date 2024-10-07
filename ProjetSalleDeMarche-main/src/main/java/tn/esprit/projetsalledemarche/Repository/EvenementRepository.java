@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Evenement;
 
-public interface EvenementRepository  extends JpaRepository<Evenement,Integer> {
+public interface EvenementRepository  extends JpaRepository<Evenement,Long> {
 }

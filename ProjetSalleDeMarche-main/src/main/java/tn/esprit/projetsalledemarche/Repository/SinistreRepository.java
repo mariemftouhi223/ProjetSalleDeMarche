@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Sinistre;
 
-public interface SinistreRepository extends JpaRepository<Sinistre,Integer> {
+public interface SinistreRepository extends JpaRepository<Sinistre,Long> {
 }

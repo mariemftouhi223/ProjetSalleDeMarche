@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Cours;
 
-public interface CoursRepository  extends JpaRepository<Cours,Integer> {
+public interface CoursRepository  extends JpaRepository<Cours,Long> {
 }

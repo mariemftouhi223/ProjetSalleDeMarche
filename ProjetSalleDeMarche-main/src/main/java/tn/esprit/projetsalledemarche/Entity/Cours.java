@@ -1,11 +1,10 @@
 package tn.esprit.projetsalledemarche.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,4 +17,13 @@ public class Cours {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+     private String titre;
+     private String contenu;
+     private int duree;
+    // Many-to-One relationship with Formation
+    @ManyToOne
+    @JoinColumn(name = "formation_id")
+    private Formation formation;
+    @OneToMany(mappedBy = "cours", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Quiz> quizList;
 }

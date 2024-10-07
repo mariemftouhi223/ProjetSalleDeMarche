@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Defi;
 
-public interface DefiRepository extends JpaRepository<Defi,Integer> {
+public interface DefiRepository extends JpaRepository<Defi,Long> {
 }

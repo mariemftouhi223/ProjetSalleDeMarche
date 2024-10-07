@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.Portefeuille;
 import tn.esprit.projetsalledemarche.Entity.ProduitAssurance;
 
-public interface ProduitAssuranceRepository  extends JpaRepository<ProduitAssurance,Integer> {
+public interface ProduitAssuranceRepository  extends JpaRepository<ProduitAssurance,Long> {
 }

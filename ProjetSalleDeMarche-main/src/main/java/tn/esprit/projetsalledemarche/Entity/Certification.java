@@ -1,11 +1,10 @@
 package tn.esprit.projetsalledemarche.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Date;
 
 @Entity
 @Getter
@@ -17,5 +16,11 @@ import lombok.experimental.FieldDefaults;
 public class Certification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
+    private String nom;
+    private String description;
+    private Date dateobtention;
+    @ManyToOne
+    @JoinColumn(name = "formation_id")
+    private Formation formation;
 }

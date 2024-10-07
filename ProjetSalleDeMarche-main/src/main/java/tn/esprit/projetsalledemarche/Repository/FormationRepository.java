@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Formation;
 
-public interface FormationRepository extends JpaRepository<Formation,Integer> {
+public interface FormationRepository extends JpaRepository<Formation,Long> {
 }

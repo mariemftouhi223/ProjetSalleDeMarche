@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Transaction;
 
-public interface TransactionRepository extends JpaRepository<Transaction,Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction,Long> {
 }

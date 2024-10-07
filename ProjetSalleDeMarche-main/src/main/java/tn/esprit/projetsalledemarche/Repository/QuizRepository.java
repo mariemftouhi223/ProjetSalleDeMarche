@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.projetsalledemarche.Entity.AnalyseTechnique;
 import tn.esprit.projetsalledemarche.Entity.Quiz;
 
-public interface QuizRepository extends JpaRepository<Quiz,Integer> {
+public interface QuizRepository extends JpaRepository<Quiz,Long> {
 }
