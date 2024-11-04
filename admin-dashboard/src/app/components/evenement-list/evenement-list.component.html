@@ -1,0 +1,7 @@
+<h2>Liste des Événements</h2>
+<ul>
+  <li *ngFor="let evenement of evenements">
+    {{ evenement.nomEvenement }} - {{ evenement.dateDebut | date }} à {{ evenement.dateFin | date }} 
+    <p>{{ evenement.description }}</p>
+  </li>
+</ul>

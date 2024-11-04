@@ -1,0 +1,58 @@
+/* Couleur de fond principale */
+body {
+    background-color: #2f2f2f; /* gris foncé */
+    color: #e0e0e0; /* texte clair pour le contraste */
+}
+
+/* Barre de navigation en bleu foncé */
+.navbar {
+    background-color: #0d47a1 !important;
+}
+
+/* Liens de la barre de navigation */
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+/* Sidebar en gris foncé pour un bon contraste */
+.sidebar {
+    background-color: #1c1c1c; /* gris très foncé */
+    border-right: 1px solid #343a40;
+}
+
+/* Liens de la sidebar en blanc */
+.sidebar .nav-link {
+    color: #ffffff !important; /* blanc pour le texte */
+    font-weight: bold; /* gras pour plus de visibilité */
+    font-size: 1.1rem; /* taille légèrement augmentée */
+}
+
+/* Liens actifs et survolés */
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: #0d47a1; /* bleu foncé pour l'état actif et le survol */
+    color: #ffffff !important; /* texte en blanc */
+    font-weight: bold;
+}
+
+/* Cartes en bleu ou vert pour différencier les informations */
+.card-sales {
+    background-color: #1a237e; /* bleu foncé */
+    color: #ffffff;
+}
+
+.card-orders {
+    background-color: #388e3c; /* vert foncé */
+    color: #ffffff;
+}
+
+.card-customers {
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.card-requests {
+    background-color: #dc3545;
+    color: #ffffff;
+}
