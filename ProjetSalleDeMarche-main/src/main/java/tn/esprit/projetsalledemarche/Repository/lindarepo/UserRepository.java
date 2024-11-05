@@ -1,7 +1,7 @@
-package tn.esprit.projetsalledemarche.Repository.autrerepo;
+package tn.esprit.projetsalledemarche.Repository.lindarepo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import tn.esprit.projetsalledemarche.Entity.autre.User;
+import tn.esprit.projetsalledemarche.Entity.Linda.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 }

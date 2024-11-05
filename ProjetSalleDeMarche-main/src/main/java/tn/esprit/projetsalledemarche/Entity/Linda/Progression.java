@@ -3,8 +3,10 @@ package tn.esprit.projetsalledemarche.Entity.Linda;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import tn.esprit.projetsalledemarche.Entity.enumerations.ProgressionStatus;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -17,12 +19,22 @@ public class Progression {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Temporal(TemporalType.DATE)
     private Date datedebut;
+
     @Temporal(TemporalType.DATE)
     private Date datefin;
-    private float score ;
+
+    private float score;
+
+    @Enumerated(EnumType.STRING) // Stocker l'énumération sous forme de chaîne dans la base de données
+    private ProgressionStatus status;
+
     @ManyToOne
     @JoinColumn(name = "formation_id")
     private Formation formation;
+
+
+
 }

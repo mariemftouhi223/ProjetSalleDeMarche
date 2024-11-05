@@ -19,31 +19,29 @@ public class FormationController {
     private FormationService formationService;
 
     @Autowired
-    private EmailService emailService; // Ajout de l'annotation @Autowired ici
+    private EmailService emailService;
 
     // Ajouter une formation
     @PostMapping("/ajouter")
     public ResponseEntity<Formation> ajouterFormation(@RequestBody Formation formation) {
-        // Ajouter la formation
-        Formation createdFormation = formationService.ajouterFormation(formation);
-
-        // Envoyer un e-mail après l'ajout
-        String destinataire = "mariem.ftouhi@esprit.tn"; // Remplacez par l'adresse e-mail du destinataire
-        String sujet = "Nouvelle formation ajoutée";
-        String contenu = "Une nouvelle formation intitulée '" + createdFormation.getTitre() + "' a été ajoutée.";
+        System.out.println("Ajout de la formation : " + formation);
 
         try {
-            // Appeler le service d'envoi d'e-mail
-            emailService.envoyerEmail(destinataire, sujet, contenu);
-        } catch (Exception e) {
-            // Log the error message
-            System.err.println("Erreur lors de l'envoi de l'e-mail : " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null); // Renvoyer une réponse 500 Internal Server Error
-        }
+            Formation createdFormation = formationService.ajouterFormation(formation);
+            System.out.println("Formation ajoutée : " + createdFormation);
 
-        // Retourner la réponse avec la formation créée
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdFormation); // 201 Created
+            // Envoyer un e-mail après l'ajout
+            String destinataire = "mariem.ftouhi@esprit.tn";
+            String sujet = "Nouvelle formation ajoutée";
+            String contenu = "Une nouvelle formation intitulée '" + createdFormation.getTitre() + "' a été ajoutée.";
+
+            emailService.envoyerEmail(destinataire, sujet, contenu);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdFormation); // 201 Created
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'ajout de la formation : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
     }
 
     // Afficher toutes les formations
@@ -62,6 +60,7 @@ public class FormationController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build(); // 404 Not Found
         } catch (Exception e) {
+            System.err.println("Erreur lors de la modification de la formation : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
@@ -75,24 +74,29 @@ public class FormationController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build(); // 404 Not Found
         } catch (Exception e) {
+            System.err.println("Erreur lors de la suppression de la formation : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
+
+    // Rechercher des formations par mot-clé
     @GetMapping("/search")
     public ResponseEntity<List<Formation>> searchFormations(@RequestParam("keyword") String keyword) {
         List<Formation> formations = formationService.searchFormations(keyword);
         return ResponseEntity.ok(formations);
     }
 
-    /**
-     * Gets the total number of progressions for a specific formation.
-     * @param formationId The ID of the formation.
-     * @return The total number of progressions.
-     */
+    // Obtenir le total des progressions pour une formation spécifique
     @GetMapping("/{formationId}/progressions/total")
     public ResponseEntity<Integer> getTotalProgressions(@PathVariable Long formationId) {
-        int totalProgressions = formationService.getTotalProgressions(formationId);
-        return ResponseEntity.ok(totalProgressions);
+        try {
+            int totalProgressions = formationService.getTotalProgressions(formationId);
+            return ResponseEntity.ok(totalProgressions); // 200 OK
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'obtention du total des progressions : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
     }
-
 }
