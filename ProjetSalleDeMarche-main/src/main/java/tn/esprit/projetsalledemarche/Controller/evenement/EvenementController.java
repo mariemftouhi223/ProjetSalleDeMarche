@@ -8,22 +8,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.projetsalledemarche.Entity.Linda.evenment.Evenement;
 
-import tn.esprit.projetsalledemarche.Entity.Linda.user.Formation;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.event.EvenementService;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.FinanceService;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.PredictionService;
+import tn.esprit.projetsalledemarche.Service.ser.event.EvenementService;
+
+import tn.esprit.projetsalledemarche.Service.ser.event.FinanceService;
 import weka.classifiers.functions.LinearRegression;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
 @RequestMapping("/evenements")
 public class EvenementController {
 
+
     @Autowired
     private EvenementService evenementService;
-    @Autowired
-    private PredictionService predictionService; // Injection de PredictionService
 
     private FinanceService financeService;
     // Ajouter un événement
@@ -81,26 +80,31 @@ public class EvenementController {
 
 
 
-
-    @GetMapping("/defi/predire-prix")
-    public String predirePrix(@RequestParam String symbol) {
-        try {
-            // Récupérer les données d'une action
-            String stockData = financeService.getStockData(symbol);
-            List<Double> prices = predictionService.prepareData(stockData); // Appel à la méthode dans PredictionService
-
-            // Entraîner le modèle
-            LinearRegression model = predictionService.trainModel(prices); // Appel à la méthode dans PredictionService
-
-            // Faire une prédiction sur le dernier prix
-            double lastPrice = prices.get(prices.size() - 1);
-            double predictedPrice = predictionService.predictPrice(model, lastPrice); // Appel à la méthode dans PredictionService
-
-            return "Le prix prédit pour " + symbol + " est : " + predictedPrice;
-        } catch (Exception e) {
-            return "Erreur lors de la prédiction : " + e.getMessage();
-        }
+    private double impactToDouble(String impact) {
+        return switch (impact.toLowerCase()) {
+            case "faible" -> 0.0;
+            case "moyen" -> 1.0;
+            case "élevé" -> 2.0;
+            default -> 0.0;
+        };
     }
+
+
+
+
+
+    // Endpoint pour inscrire un utilisateur à un événement payant
+    @PostMapping("/inscription/{idEvenement}/{idUtilisateur}")
+    public ResponseEntity<String> inscrireAEvent(@PathVariable Long idEvenement,
+                                                 @PathVariable Long idUtilisateur,
+                                                 @RequestParam String methodDePaiement) {
+        String resultat = evenementService.inscrireAEvent(idEvenement, idUtilisateur, methodDePaiement);
+        return ResponseEntity.ok(resultat);
+    }
+
+
+
+
 
 
 

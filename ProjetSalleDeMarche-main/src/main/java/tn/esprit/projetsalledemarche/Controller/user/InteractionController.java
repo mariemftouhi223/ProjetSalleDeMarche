@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.projetsalledemarche.Entity.Linda.evenment.Interaction;
 
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.event.InteractionService;
+import tn.esprit.projetsalledemarche.Service.ser.event.InteractionService;
 
 import java.util.List;
 

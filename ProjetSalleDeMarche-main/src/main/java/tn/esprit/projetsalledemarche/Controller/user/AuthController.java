@@ -28,10 +28,10 @@
     @RestController
     @RequestMapping("/api/auth")
     public class AuthController {
-        private  final AuthenticationManager authenticationManager;
-        private   final UserRepository userRepository;
-        private final  RoleRepository roleRepository;
-        private  final PasswordEncoder passwordEncoder;
+        private final AuthenticationManager authenticationManager;
+        private final UserRepository userRepository;
+        private final RoleRepository roleRepository;
+        private final PasswordEncoder passwordEncoder;
         private final JWTGenerator jwtGenerator;
 
         @Autowired
@@ -45,15 +45,25 @@
         }
 
         @PostMapping("login")
-        public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDto loginDto){
+        public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDto loginDto) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginDto.getUsername(),
                             loginDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtGenerator.generateToken(authentication);
-            return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+
+            // Récupérer l'utilisateur connecté et son rôle
+            User user = userRepository.findByUsername(loginDto.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found!"));
+            String role = user.getRoles().get(0).getName(); // Suppose que l'utilisateur a un seul rôle
+
+            // Retourner le token avec le rôle
+            AuthResponseDTO response = new AuthResponseDTO(token);
+            response.setRole(role);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
+
 
         @PostMapping("/register")
         public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
@@ -75,15 +85,15 @@
             user.setLastName(registerDto.getLastName());
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-
-            // Assigner un rôle "USER"
-            Role roles = roleRepository.findByName("USER")
-                    .orElseThrow(() -> new RuntimeException("Role USER not found!"));
-            user.setRoles(Collections.singletonList(roles));
+            // Vérifier et attribuer le rôle (par défaut : USER)
+            String roleName = (registerDto.getRole() != null && registerDto.getRole().equalsIgnoreCase("ADMIN")) ? "ADMIN" : "USER";
+            Role role = roleRepository.findByName(roleName)
+                    .orElseThrow(() -> new RuntimeException("Role " + roleName + " not found!"));
+            user.setRoles(Collections.singletonList(role));
 
             // Sauvegarder l'utilisateur dans la base de données
             userRepository.save(user);
 
-            // Retourner une réponse de succès
-            return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
-        }}
+            return new ResponseEntity<>("User registered successfully with role: " + roleName, HttpStatus.CREATED);
+        }
+    }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.projetsalledemarche.Entity.Linda.formation.UserInteraction;
 
 import tn.esprit.projetsalledemarche.Entity.Linda.user.Formation;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.user.UserInteractionService;
+import tn.esprit.projetsalledemarche.Service.ser.user.UserInteractionService;
 
 import java.util.List;
 

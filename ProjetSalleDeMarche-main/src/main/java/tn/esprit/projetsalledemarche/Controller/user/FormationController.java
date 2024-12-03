@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.projetsalledemarche.Entity.Linda.user.Formation;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.user.FormationService;
+import tn.esprit.projetsalledemarche.Service.ser.user.FormationService;
 
 import java.util.List;
 

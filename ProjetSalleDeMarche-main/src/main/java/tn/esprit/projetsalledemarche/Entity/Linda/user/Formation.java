@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import tn.esprit.projetsalledemarche.Entity.Linda.formation.Certification;
-import tn.esprit.projetsalledemarche.Entity.Linda.formation.Cours;
 import tn.esprit.projetsalledemarche.Entity.Linda.formation.Progression;
 import tn.esprit.projetsalledemarche.Entity.Linda.formation.UserInteraction;
 
@@ -38,9 +37,6 @@ public class Formation {
     private List<Progression> progressions;
 
     // Relation One-to-Many avec Cours
-    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Cours> cours;
 
     // Relation One-to-Many avec Certification
     @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL)

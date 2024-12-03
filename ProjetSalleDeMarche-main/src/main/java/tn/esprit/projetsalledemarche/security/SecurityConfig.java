@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/evenements").permitAll()
                         .requestMatchers("/**").permitAll()
                         .requestMatchers("/error").permitAll()
-
+                        .requestMatchers("/reviews/**").permitAll() // Permettre l'accès aux avis (ajouter ** pour tous les sous-chemins)
 
                         .anyRequest().authenticated()); // Toute autre requête nécessite une authentification
 

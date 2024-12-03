@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tn.esprit.projetsalledemarche.Entity.Linda.user.User;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.ser.user.UserService;
+import tn.esprit.projetsalledemarche.Service.ser.user.UserService;
 @RestController
 public class UserController {
     @Autowired

@@ -1,50 +1,41 @@
 package tn.esprit.projetsalledemarche.Controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.projetsalledemarche.Service.Servicelinda.IMP.ReviewService;
-import tn.esprit.projetsalledemarche.dto.ReviewDto;
-
-import java.util.List;
-
+import tn.esprit.projetsalledemarche.Entity.Linda.user.Review;
+import tn.esprit.projetsalledemarche.Service.ser.SentimentService;
+import tn.esprit.projetsalledemarche.Service.ser.user.ReviewServiceImpl;
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/reviews")
 public class ReviewController {
-    private ReviewService reviewService;
+
+    private final ReviewServiceImpl reviewServiceImpl;
 
     @Autowired
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    public ReviewController(ReviewServiceImpl reviewServiceImpl) {
+        this.reviewServiceImpl = reviewServiceImpl;
     }
 
-    @PostMapping("/formation/{formationId}/reviews")
-    public ResponseEntity<ReviewDto> createReview(@PathVariable(value = "formationId") Long formationId, @RequestBody ReviewDto reviewDto) {
-        return new ResponseEntity<>(reviewService.createReview(formationId, reviewDto), HttpStatus.CREATED);
+    // Ajouter un avis
+    @PostMapping
+    public ResponseEntity<Review> addReview(@RequestBody Review review) {
+        Review savedReview = reviewServiceImpl.addReview(review);
+        return ResponseEntity.ok(savedReview);
     }
 
-    @GetMapping("/formation/{formationId}/reviews")
-    public List<ReviewDto> getReviewsByFormationId(@PathVariable(value = "formationId") Long formationId) {
-        return reviewService.getReviewsByFormationId(formationId);
-    }
+    // Obtenir le sentiment associé à un avis
+    @GetMapping("/{id}/sentiment")
+    public ResponseEntity<String> getReviewSentiment(@PathVariable("id") Long reviewId) {
+        // Récupérer l'avis depuis le service
+        Review review = reviewServiceImpl.getReviewById(reviewId);
 
-    @GetMapping("/formation/{formationId}/reviews/{id}")
-    public ResponseEntity<ReviewDto> getReviewById(@PathVariable(value = "formationId") Long formationId, @PathVariable(value = "id") Long reviewId) {
-        ReviewDto reviewDto = reviewService.getReviewById(formationId, reviewId);
-        return new ResponseEntity<>(reviewDto, HttpStatus.OK);
-    }
+        // Vérifier si l'avis existe
+        if (review == null) {
+            return ResponseEntity.notFound().build(); // Si l'avis n'est pas trouvé, retourner 404
+        }
 
-    @PutMapping("/formation/{formationId}/reviews/{id}")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable(value = "formationId") Long formationId, @PathVariable(value = "id") Long reviewId,
-                                                  @RequestBody ReviewDto reviewDto) {
-        ReviewDto updatedReview = reviewService.updateReview(formationId, reviewId, reviewDto);
-        return new ResponseEntity<>(updatedReview, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/formation/{formationId}/reviews/{id}")
-    public ResponseEntity<String> deleteReview(@PathVariable(value = "formationId") Long formationId, @PathVariable(value = "id") Long reviewId) {
-        reviewService.deleteReview(formationId, reviewId);
-        return new ResponseEntity<>("Review deleted successfully", HttpStatus.OK);
+        // Retourner le sentiment de l'avis
+        return ResponseEntity.ok(review.getSentiment());
     }
 }

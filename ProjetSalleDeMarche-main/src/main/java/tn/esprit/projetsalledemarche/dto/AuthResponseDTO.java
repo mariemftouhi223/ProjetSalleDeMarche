@@ -10,5 +10,9 @@ public class AuthResponseDTO {
     public AuthResponseDTO(String accessToken) {
         this.accessToken = accessToken;
     }
+
+    public void setRole(String role) {
+
+    }
     //Usage : Envoyé au client après une connexion réussie pour qu’il puisse accéder aux ressources protégées.
 }
