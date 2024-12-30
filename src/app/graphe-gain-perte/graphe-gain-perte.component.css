@@ -1,0 +1,12 @@
+:host {
+    display: block;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  ngx-charts-bar-vertical {
+    margin-top: 20px;
+  }
+  

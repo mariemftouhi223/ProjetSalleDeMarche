@@ -1,0 +1,16 @@
+<div>
+    <h2>Graphique des Gains/Perte</h2>
+  
+    <ngx-charts-bar-vertical
+      [view]="view"
+      [results]="gainsLosses"  
+      [gradient]="false"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Symboles'"
+      [yAxisLabel]="'Gains/Perte'">
+    </ngx-charts-bar-vertical>
+</div>

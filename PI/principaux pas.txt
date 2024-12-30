@@ -1,0 +1,6 @@
+Créer une Interface Utilisateur
+Si vous ne l'avez pas encore fait, commencez à développer une interface utilisateur (UI) avec Angular pour afficher les données du marché. Vous pouvez utiliser des composants comme des tableaux ou des graphiques pour visualiser ces données.
+4. Analyse des Données
+Pensez à ajouter des fonctionnalités d’analyse des données, comme des calculs de statistiques (moyennes, écart-types, etc.) ou l’application d’algorithmes de machine learning pour des prédictions.
+5. Simulation de Trading
+Implémentez des fonctionnalités de simulation de trading, comme l'achat et la vente d'actifs basés sur les données récupérées. Vous pouvez ajouter un modèle d'utilisateur qui suivra les transactions et le solde.
