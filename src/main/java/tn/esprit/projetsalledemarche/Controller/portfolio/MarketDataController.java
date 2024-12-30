@@ -10,7 +10,10 @@ import tn.esprit.projetsalledemarche.Entity.Linda.portfolio.*;
 import tn.esprit.projetsalledemarche.Repository.lindarepo.portfolio.MarketDataRepository;
 import tn.esprit.projetsalledemarche.Repository.lindarepo.portfolio.PortfolioRepository;
 import tn.esprit.projetsalledemarche.Repository.lindarepo.portfolio.PositionRepository;
-import tn.esprit.projetsalledemarche.Service.ser.portfolio.*;
+import tn.esprit.projetsalledemarche.Service.ser.portfolio.IndicatorService;
+import tn.esprit.projetsalledemarche.Service.ser.portfolio.MarketDataService;
+import tn.esprit.projetsalledemarche.Service.ser.portfolio.PortfolioService;
+import tn.esprit.projetsalledemarche.Service.ser.portfolio.PositionService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -20,46 +23,29 @@ import java.util.*;
 @RequestMapping("/portfolio")
 public class MarketDataController {
 
-
-    private final OrderService orderService;
-    private final OrderBookService orderBookService;
-    private final PortfolioService portfolioService;
+    private  final PortfolioService portfolioService;// Assurez-vous que ce service est injecté correctement
     private final RestTemplate restTemplate;
     private final PositionService positionService;
+    private final PositionRepository positionRepository;
+    private final PortfolioRepository portfolioRepository;
     private final MarketDataService marketDataService;
     private final IndicatorService indicatorService;
     private final MarketDataRepository marketDataRepository;
-    private final PositionRepository positionRepository;
-    private final PortfolioRepository portfolioRepository;
-    private final SimpMessagingTemplate messagingTemplate;
-
     private List<double[]> priceHistory = new ArrayList<>();
     private String selectedSymbol;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public MarketDataController(
-            OrderService orderService, OrderBookService orderBookService,
-            RestTemplate restTemplate,
-            PortfolioRepository portfolioRepository,
-            PositionRepository positionRepository,
-            PositionService positionService,
-            MarketDataService marketDataService,
-            IndicatorService indicatorService,
-            MarketDataRepository marketDataRepository,
-            SimpMessagingTemplate messagingTemplate,
-            PortfolioService portfolioService
-    ) {
-        this.orderService = orderService;
-        this.orderBookService = orderBookService;
+    public MarketDataController(RestTemplate restTemplate,PortfolioRepository portfolioRepository,PositionRepository positionRepository, PositionService positionService, MarketDataService marketDataService, IndicatorService indicatorService, MarketDataRepository marketDataRepository, SimpMessagingTemplate messagingTemplate,PortfolioService portfolioService) {
         this.restTemplate = restTemplate;
-        this.portfolioRepository = portfolioRepository;
-        this.positionRepository = positionRepository;
+        this.portfolioRepository=portfolioRepository;
+        this.positionRepository=positionRepository;
         this.positionService = positionService;
         this.marketDataService = marketDataService;
         this.indicatorService = indicatorService;
         this.marketDataRepository = marketDataRepository;
         this.messagingTemplate = messagingTemplate;
-        this.portfolioService = portfolioService;
+        this.portfolioService=portfolioService;
     }
 
     // Envoie les mises à jour du carnet d'ordre par WebSocket
@@ -171,13 +157,6 @@ public class MarketDataController {
                 portfolioId,
                 userId
         );
-        String type = positionRequest.getPositionType().equalsIgnoreCase("BUY") ? "BID" : "ASK";
-        orderBookService.addOrderToOrderBook(
-                positionRequest.getSymbol(),
-                positionRequest.getEntryPrice(),
-                positionRequest.getQuantity(),
-                type
-        );
 
         return ResponseEntity.ok(newPosition);
     }
@@ -284,36 +263,9 @@ public class MarketDataController {
         return portfolioService.getBalenceByPortfolio(id);
     }
 
-
-    // --- Order Management ---
-    @PostMapping("/add")
-    public Order addOrder(@RequestBody Order order) {
-        return orderService.addOrder(order);
-    }
-
-    @GetMapping("/orders")
-    public Map<String, List<Order>> getOrderBook() {
-        Map<String, List<Order>> orderBook = new HashMap<>();
-        orderBook.put("bids", orderService.getOrderBook("BID"));
-        orderBook.put("asks", orderService.getOrderBook("ASK"));
-        return orderBook;
-    }
-
-    @DeleteMapping("/cancel/{id}")
-    public void cancelOrder(@PathVariable Long id) {
-        orderService.cancelOrder(id);
-    }
-
-    @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("/orders/{symbol}")
-    public Map<String, List<Order>> getOrdersBySymbol(@PathVariable String symbol) {
-        Map<String, List<Order>> orderBook = new HashMap<>();
-        orderBook.put("bids", orderService.getOrderBook1("BID", symbol)); // Liste des ordres d'achat
-        orderBook.put("asks", orderService.getOrderBook1("ASK", symbol)); // Liste des ordres de vente
-        return orderBook;
-    }
-
 }
+
+
 
 
 

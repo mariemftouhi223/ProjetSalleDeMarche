@@ -64,6 +64,10 @@
 
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>ai.djl</groupId>
             <artifactId>api</artifactId>
             <version>0.14.0</version>
