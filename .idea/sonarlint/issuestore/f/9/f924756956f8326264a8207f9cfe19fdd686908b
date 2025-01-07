@@ -1,0 +1,14 @@
+
+`	java:S1129"FDefine and throw a dedicated exception instead of using a generic one.(À­ôúúÿÿÿÿ
+`	java:S112@"FDefine and throw a dedicated exception instead of using a generic one.(î¸Ž—ùÿÿÿÿ
+€
+java:S1488)"eImmediately return this expression instead of assigning it to the temporary variable "openPositions".(Þïâîÿÿÿÿÿ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(’úš™
+X
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄÞ
+X
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄÞ
+R	java:S107O"=Method has 11 parameters, which is greater than 7 authorized.(þãŠ´
+Q	java:S125$"<This block of commented-out lines of code should be removed.(Šäž
+V	java:S125/"<This block of commented-out lines of code should be removed.(Ý”æ­úÿÿÿÿ
+Q	java:S125h"<This block of commented-out lines of code should be removed.(äæª¦

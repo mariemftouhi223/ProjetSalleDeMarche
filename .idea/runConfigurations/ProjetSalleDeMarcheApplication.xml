@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ProjetSalleDeMarcheApplication" type="Application" factoryName="Application" singleton="false">
+    <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../jdk-17.0.12" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="tn.esprit.projetsalledemarche.ProjetSalleDeMarcheApplication" />
+    <module name="ProjetSalleDeMarche" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,21 @@
+
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(î¦£õ8óîÀµ¾2
+c	java:S107,"BConstructor has 12 parameters, which is greater than 7 authorized.(İ§Ğöûÿÿÿÿ8Ü’ÀÉÂ2
+G	java:S106^"+Replace this use of System.out by a logger.(ï¥†ø8ä’ÀÉÂ2
+H	java:S106€"+Replace this use of System.out by a logger.(º¯Ë8è’ÀÉÂ2
+G	java:S106"+Replace this use of System.out by a logger.(ü´w8ë’ÀÉÂ2
+D
+java:S1452Ğ"&Remove usage of generic wildcard type.(¹Á…«8ò’ÀÉÂ2
+L
+java:S1481“".Remove this unused "portfolio" local variable.(Œ¹Ó8Âø“ÊÂ2
+H	java:S106³"+Replace this use of System.out by a logger.(Ì¹êü8ëÄ˜ÊÂ2
+n
+java:S1128"QRemove this unused import 'tn.esprit.projetsalledemarche.Entity.Linda.user.User'.(ÔˆÑ·8ôÄ˜ÊÂ2
+j
+java:S1128"MRemove this unused import 'org.springframework.security.core.Authentication'.(ñıÓ“8ôÄ˜ÊÂ2
+y
+java:S1128	"\Remove this unused import 'org.springframework.security.core.context.SecurityContextHolder'.(ŒÄæë8ôÄ˜ÊÂ2
+O
+java:S1068"2Remove this unused "userRepository" private field.(¼²Æ÷8Í´”ÊÂ2
+Q
+java:S1068"4Remove this unused "portfolioService" private field.(…Àî8‹“ÀÉÂ2

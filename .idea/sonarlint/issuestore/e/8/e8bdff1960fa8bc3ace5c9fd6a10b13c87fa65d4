@@ -1,0 +1,7 @@
+
+f	java:S117$"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(æ›«
+u
+java:S1488$"_Immediately return this expression instead of assigning it to the temporary variable "Balence".(æ›«
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(’úš™
+h
+java:S3655$"RCall "portfolio.isPresent()" or "!portfolio.isEmpty()" before accessing the value.(æ›«

@@ -1,0 +1,10 @@
+
+>
+java:S1604'"(Make this anonymous inner class a lambda(ÈŸ®«
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ã‹Ç
+X
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ
+X
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ
+M
+java:S1168"+Return an empty collection instead of null.(â•Ø„ûÿÿÿÿ8ÇÄÂ2

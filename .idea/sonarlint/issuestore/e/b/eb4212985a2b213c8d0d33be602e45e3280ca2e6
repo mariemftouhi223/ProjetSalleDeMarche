@@ -1,0 +1,8 @@
+
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¥³øÿÿÿÿ
+X
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ
+m
+java:S1128"PRemove this unused import 'org.springframework.web.bind.annotation.CrossOrigin'.(º´Ñ†8À´ÄÂ2
+a
+java:S1128	"?Remove this unused import 'org.springframework.http.MediaType'.(úŸİ¯şÿÿÿÿ8Á´ÄÂ2
