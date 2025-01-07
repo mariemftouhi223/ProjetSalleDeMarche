@@ -12,11 +12,15 @@ public interface ProduitAssuranceRepository extends JpaRepository < ProduitAssur
 
 
     @Query("SELECT p FROM ProduitAssurance p WHERE p.NomProduit = :nomProduit")
-    ProduitAssurance findByNomProduit(@Param("nomProduit") String nomProduit);
-
+   List <ProduitAssurance> findByNomProduit(@Param("nomProduit") String nomProduit);
 
 
     List<ProduitAssurance> findByModelesActuariels_DateCalculBetween(Date startDate, Date endDate);
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM ProduitAssurance p WHERE p.NomProduit = :nomProduit")
+    boolean existsByNomProduit(@Param("nomProduit") String nomProduit);
+
+    @Query("SELECT COUNT(p) FROM ProduitAssurance p WHERE p.NomProduit LIKE :NomProduit%")
+    long countByNomProduitStartingWith(@Param("NomProduit") String NomProduit);
 
 
 

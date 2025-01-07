@@ -1,6 +1,7 @@
 package tn.esprit.projetsalledemarche.Service;
 
 import tn.esprit.projetsalledemarche.Entity.Sinistre;
+import tn.esprit.projetsalledemarche.Entity.SinistreDTO;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,7 +13,7 @@ public interface ISinistreService  {
     Sinistre addSinistre(Sinistre sinistre);
 
     Sinistre getSinistre(long idSinistre);
-
+    SinistreDTO getSinistreDTO(long idSinistre);
     List<Sinistre> getAllSinistres();
 
     void deleteSinistre(Long idSinistre);

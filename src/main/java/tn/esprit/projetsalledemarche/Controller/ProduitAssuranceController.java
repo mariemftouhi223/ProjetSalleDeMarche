@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.projetsalledemarche.Service.IProfilService;
 import tn.esprit.projetsalledemarche.Service.ProfilService;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -85,13 +86,24 @@ public class ProduitAssuranceController {
     }
 
     @PostMapping("/generate")
-    public ProduitAssurance generateProduitAssurance(
-            @RequestParam String nomActif,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateCalcul,
-            @RequestParam String typeAssurance,
-            @RequestParam Long idProfil) {
-        return ProduitAssuranceService.generateProduitAssurance(nomActif, dateCalcul, typeAssurance, idProfil);
+    public ResponseEntity<ProduitAssurance> generateProduitAssurance(@RequestBody Map<String, Object> payload) {
+        try {
+
+            // Extraire les paramètres de l'objet JSON
+            String nomActif = (String) payload.get("nomActif");
+            String typeAssurance = (String) payload.get("typeAssurance");
+            Date dateCalcul = new SimpleDateFormat("yyyy-MM-dd").parse((String) payload.get("dateCalcul"));
+            Long idProfil = Long.valueOf(payload.get("idProfil").toString());
+
+            // Appeler le service pour générer le produit d'assurance
+            ProduitAssurance produit = ProduitAssuranceService.generateProduitAssurance(nomActif, dateCalcul, typeAssurance, idProfil);
+            return ResponseEntity.ok(produit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
+
     @GetMapping("/sinistre-prime-ratio/{idProduit}")
     public ResponseEntity<Map<String, Object>> getSinistrePrimeRatio(@PathVariable Long idProduit) {
         try {
@@ -105,10 +117,6 @@ public class ProduitAssuranceController {
     @GetMapping("/calculateSinistrePrimeRatio/clos")
     public ResponseEntity<Map<String, Object>> calculateSinistrePrimeRatioForClosSinistres(
             @RequestParam("nomProduit") String nomProduit) {
-        if (nomProduit == null || nomProduit.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Le nom du produit est obligatoire."));
-        }
-
         try {
             BigDecimal ratio = ProduitAssuranceService.calculateSinistrePrimeRatioForClosSinistres(nomProduit);
 

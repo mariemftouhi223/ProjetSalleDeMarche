@@ -31,5 +31,6 @@ public class Sinistre implements Serializable {
     // Relation avec ProduitAssurance
     @ManyToOne
     @JoinColumn(name = "idProduitAssurance", nullable = false)
+    @JsonIgnore
     private ProduitAssurance produitAssurance;
 }

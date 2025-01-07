@@ -15,11 +15,13 @@ import tn.esprit.projetsalledemarche.Repository.ProduitAssuranceRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class ReportService implements IReportService {
-    @Autowired
+
     private final ProduitAssuranceRepository produitAssuranceRepository;
 
     @Autowired
@@ -29,11 +31,18 @@ public class ReportService implements IReportService {
 
     @Override
     public byte[] generateProductReport(String nomProduit) {
-        ProduitAssurance produitAssurance = produitAssuranceRepository.findByNomProduit(nomProduit);
+        // Récupérer les produits d'assurance correspondant au nom
+        List<ProduitAssurance> produitsAssurance = produitAssuranceRepository.findByNomProduit(nomProduit);
 
-        if (produitAssurance == null) {
+        if (produitsAssurance == null || produitsAssurance.isEmpty()) {
             throw new RuntimeException("Produit Assurance introuvable pour le nom : " + nomProduit);
         }
+
+        if (produitsAssurance.size() > 1) {
+            throw new RuntimeException("Plusieurs produits trouvés pour le nom : " + nomProduit);
+        }
+
+        ProduitAssurance produitAssurance = produitsAssurance.get(0); // Sélectionner le premier produit
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             PdfWriter writer = new PdfWriter(baos);
@@ -61,9 +70,9 @@ public class ReportService implements IReportService {
             productTable.addCell("Nom du Produit");
             productTable.addCell(produitAssurance.getNomProduit());
             productTable.addCell("Prime");
-            productTable.addCell(produitAssurance.getPrime().toString());
+            productTable.addCell(produitAssurance.getPrime() != null ? produitAssurance.getPrime().toString() : "N/A");
             productTable.addCell("Couverture");
-            productTable.addCell(produitAssurance.getCouverture().toString());
+            productTable.addCell(produitAssurance.getCouverture() != null ? produitAssurance.getCouverture().toString() : "N/A");
             document.add(productTable);
 
             // Ajouter un espace
@@ -84,9 +93,9 @@ public class ReportService implements IReportService {
                 sinistresTable.addCell("Produit d'Assurance");
 
                 for (Sinistre sinistre : produitAssurance.getSinistres()) {
-                    sinistresTable.addCell(sinistre.getDateSinistre().toString());
-                    sinistresTable.addCell(sinistre.getMontantSinistre().toString());
-                    sinistresTable.addCell(sinistre.getEtatSinistre());
+                    sinistresTable.addCell(sinistre.getDateSinistre() != null ? sinistre.getDateSinistre().toString() : "N/A");
+                    sinistresTable.addCell(sinistre.getMontantSinistre() != null ? sinistre.getMontantSinistre().toString() : "N/A");
+                    sinistresTable.addCell(sinistre.getEtatSinistre() != null ? sinistre.getEtatSinistre() : "N/A");
                     sinistresTable.addCell(produitAssurance.getNomProduit());
                 }
                 document.add(sinistresTable);
@@ -97,8 +106,13 @@ public class ReportService implements IReportService {
             // Fermer le document
             document.close();
 
-            // Enregistrer localement pour tests (facultatif)
-            Files.write(Paths.get("C:/Reports/rapport_" + nomProduit.replace(" ", "_") + ".pdf"), baos.toByteArray());
+            // Enregistrement local
+            Path outputPath = Paths.get("C:/Reports/");
+            if (!Files.exists(outputPath)) {
+                Files.createDirectories(outputPath); // Crée le répertoire s'il n'existe pas
+            }
+
+            Files.write(outputPath.resolve("rapport_" + nomProduit.replace(" ", "_") + ".pdf"), baos.toByteArray());
 
             return baos.toByteArray();
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package tn.esprit.projetsalledemarche.Service;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import jakarta.persistence.EntityNotFoundException;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -275,7 +276,24 @@ public class ModeleActuarielService implements IModeleActuarielService {
     }
 
     @Override
-    public ModeleActuariel updateModeleActuariels(ModeleActuariel modeleActuariel) {
-        return modeleActuarielRepository.save(modeleActuariel);
+    public ModeleActuariel updateModeleActuariels(ModeleActuariel updatedModele) {
+        // Retrieve the old model by ID
+        ModeleActuariel existingModele = modeleActuarielRepository.findById(updatedModele.getIdModele())
+                .orElseThrow(() -> new EntityNotFoundException("ModeleActuariel not found with ID: " + updatedModele.getIdModele()));
+
+        // Update fields with new values, preserving old ones if not provided
+        if (updatedModele.getNomActif() != null) {
+            existingModele.setNomActif(updatedModele.getNomActif());
+        }
+        if (updatedModele.getDateCalcul() != null) {
+            existingModele.setDateCalcul(updatedModele.getDateCalcul());
+        }
+        if (updatedModele.getValeurEstimee() != null) {
+            existingModele.setValeurEstimee(updatedModele.getValeurEstimee());
+        }
+
+        // Save and return the updated model
+        return modeleActuarielRepository.save(existingModele);
     }
+
 }

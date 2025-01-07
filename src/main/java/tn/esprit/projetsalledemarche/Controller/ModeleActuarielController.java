@@ -60,7 +60,9 @@ public class ModeleActuarielController {
             @RequestParam boolean saveToDatabase) {
 
         try {
-            BigDecimal valeurEstimee = modeleActuarielService.processAndSaveValeurEstimee(nomActif, dateCalcul, saveToDatabase);
+            String baseNomActif = nomActif.replaceAll("\\d+$", "");
+
+            BigDecimal valeurEstimee = modeleActuarielService.processAndSaveValeurEstimee(baseNomActif, dateCalcul, saveToDatabase);
 
             // Préparer la réponse avec les détails
             Map<String, Object> response = new HashMap<>();

@@ -1,5 +1,6 @@
 package tn.esprit.projetsalledemarche.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.projetsalledemarche.Entity.*;
@@ -34,9 +35,29 @@ public class ProduitAssuranceService implements IProduitAssuranceService {
     }
 
     @Override
-    public ProduitAssurance updateProduitAssurance(ProduitAssurance produitAssurance) {
-        return produitAssuranceRepository.save(produitAssurance);
+    public ProduitAssurance updateProduitAssurance(ProduitAssurance updatedProduit) {
+        // Fetch the existing product from the database
+        ProduitAssurance existingProduit = produitAssuranceRepository.findById(updatedProduit.getIdProduit())
+                .orElseThrow(() -> new EntityNotFoundException("ProduitAssurance not found with ID: " + updatedProduit.getIdProduit()));
+
+        // Update only the fields that are not null in the updated entity
+        if (updatedProduit.getNomProduit() != null) {
+            existingProduit.setNomProduit(updatedProduit.getNomProduit());
+        }
+        if (updatedProduit.getPrime() != null) {
+            existingProduit.setPrime(updatedProduit.getPrime());
+        }
+        if (updatedProduit.getCouverture() != null) {
+            existingProduit.setCouverture(updatedProduit.getCouverture());
+        }
+        if (updatedProduit.getAtype() != null) {
+            existingProduit.setAtype(updatedProduit.getAtype());
+        }
+
+        // Save and return the updated product
+        return produitAssuranceRepository.save(existingProduit);
     }
+
 
     @Override
     public List<ProduitAssurance> getAllProduitAssurance() {
@@ -45,8 +66,16 @@ public class ProduitAssuranceService implements IProduitAssuranceService {
 
     @Override
     public ProduitAssurance addProduitAssurance(ProduitAssurance produitAssurance) {
+        // Base name of the product
+
+        // Count existing products with the base name
+
+
+        // Save the product and return it
         return produitAssuranceRepository.save(produitAssurance);
     }
+
+
 
     public BigDecimal calculatePrime(String nomActif, Date dateCalcul) {
         List<Double> predictions = modeleActuarielService.getPredictionsAroundDate(nomActif, dateCalcul);
@@ -96,7 +125,13 @@ public class ProduitAssuranceService implements IProduitAssuranceService {
         // Calcul de la prime et de la couverture
         BigDecimal prime = calculatePrime(nomActif, dateCalcul);
         BigDecimal couverture = calculateCoverage(nomActif, dateCalcul);
+        // Count existing products with the base name
+        long count = produitAssuranceRepository.countByNomProduitStartingWith("Assurance " + nomActif);
 
+        // If count is greater than zero, append it as a suffix
+        if (count > 0) {
+            nomActif=nomActif+count;
+        }
         // Création de l'objet ProduitAssurance
         ProduitAssurance produitAssurance = new ProduitAssurance();
         produitAssurance.setNomProduit("Assurance " + nomActif); // Nom du produit
@@ -136,38 +171,51 @@ public class ProduitAssuranceService implements IProduitAssuranceService {
 
     @Override
     public BigDecimal calculateSinistrePrimeRatioForClosSinistres(String nomProduit) {
-        ProduitAssurance produitAssurance = produitAssuranceRepository.findByNomProduit(nomProduit);
+        // Récupérer tous les produits avec le même nom
+        List<ProduitAssurance> produits = produitAssuranceRepository.findByNomProduit(nomProduit);
 
-        if (produitAssurance == null) {
-            throw new RuntimeException("Produit Assurance introuvable pour le nom : " + nomProduit);
+        if (produits.isEmpty()) {
+            throw new RuntimeException("Aucun produit trouvé pour le nom : " + nomProduit);
         }
 
-        Set<Sinistre> sinistres = produitAssurance.getSinistres();
+        // Variables globales pour le calcul
+        BigDecimal totalMontantSinistres = BigDecimal.ZERO;
+        BigDecimal totalPrime = BigDecimal.ZERO;
 
-        // Filtrer les sinistres par état "clos"
-        List<Sinistre> sinistresClos = sinistres.stream()
-                .filter(sinistre -> "clos".equalsIgnoreCase(sinistre.getEtatSinistre()))
-                .toList();
+        for (ProduitAssurance produitAssurance : produits) {
+            Set<Sinistre> sinistres = produitAssurance.getSinistres();
 
-        if (sinistresClos.isEmpty()) {
-            throw new RuntimeException("Aucun sinistre clos trouvé pour ce produit.");
+            // Filtrer les sinistres clos
+            List<Sinistre> sinistresClos = sinistres.stream()
+                    .filter(sinistre -> "clos".equalsIgnoreCase(sinistre.getEtatSinistre()))
+                    .toList();
+
+            if (!sinistresClos.isEmpty()) {
+                // Calculer le montant total des sinistres clos pour ce produit
+                BigDecimal montantSinistres = sinistresClos.stream()
+                        .map(Sinistre::getMontantSinistre)
+                        .filter(Objects::nonNull)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                totalMontantSinistres = totalMontantSinistres.add(montantSinistres);
+            }
+
+            // Ajouter la prime de ce produit
+            BigDecimal prime = produitAssurance.getPrime();
+            if (prime == null || prime.compareTo(BigDecimal.ZERO) == 0) {
+                throw new RuntimeException("La prime est inexistante ou égale à zéro pour le produit : " + produitAssurance.getNomProduit());
+            }
+
+            totalPrime = totalPrime.add(prime);
         }
 
-        // Calculer le montant total des sinistres clos
-        BigDecimal totalMontantSinistres = sinistresClos.stream()
-                .map(Sinistre::getMontantSinistre)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        // Récupérer la prime du produit
-        BigDecimal prime = produitAssurance.getPrime();
-
-        if (prime == null || prime.compareTo(BigDecimal.ZERO) == 0) {
-            throw new RuntimeException("La prime est inexistante ou égale à zéro pour ce produit.");
+        // Vérifier si la prime totale est valide
+        if (totalPrime.compareTo(BigDecimal.ZERO) == 0) {
+            throw new RuntimeException("La prime totale est inexistante ou égale à zéro.");
         }
 
-        // Calculer et retourner le ratio
-        return totalMontantSinistres.divide(prime, 2, RoundingMode.HALF_UP);
+        // Calculer et retourner le ratio global
+        return totalMontantSinistres.divide(totalPrime, 2, RoundingMode.HALF_UP);
     }
 
 

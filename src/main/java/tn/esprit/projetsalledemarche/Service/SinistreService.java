@@ -1,7 +1,9 @@
 package tn.esprit.projetsalledemarche.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import tn.esprit.projetsalledemarche.Entity.ProduitAssurance;
+import tn.esprit.projetsalledemarche.Entity.SinistreDTO;
 import tn.esprit.projetsalledemarche.Repository.ProduitAssuranceRepository;
 import tn.esprit.projetsalledemarche.Repository.SinistreRepository;
 import tn.esprit.projetsalledemarche.Entity.Sinistre;
@@ -9,7 +11,6 @@ import tn.esprit.projetsalledemarche.Entity.Sinistre;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 
 @Service
 public class SinistreService implements ISinistreService {
@@ -34,6 +35,12 @@ public class SinistreService implements ISinistreService {
     }
 
     @Override
+    public SinistreDTO getSinistreDTO(long idSinistre) {
+        return  sinistreRepository.findSinistreByIdWithProduitNom(idSinistre);
+    }
+
+
+    @Override
     public List<Sinistre> getAllSinistres() {
         return sinistreRepository.findAll();
     }
@@ -45,18 +52,27 @@ public class SinistreService implements ISinistreService {
 
     @Override
     public Sinistre updateSinistre(Sinistre sinistre) {
+        if (!sinistreRepository.existsById(sinistre.getIdSinistre())) {
+            throw new RuntimeException("Sinistre introuvable pour l'ID : " + sinistre.getIdSinistre());
+        }
+        System.out.println("Sauvegarde du sinistre : " + sinistre);
         return sinistreRepository.save(sinistre);
     }
+
 
 
     @Override
     public Sinistre createSinistre(String nomProduit, Date dateSinistre, BigDecimal montantSinistre, String etatSinistre) {
         // Récupérer le produit d'assurance par son nom
-        ProduitAssurance produitAssurance = produitAssuranceRepository.findByNomProduit(nomProduit);
+        List<ProduitAssurance> produits = produitAssuranceRepository.findByNomProduit(nomProduit);
 
-        if (produitAssurance == null) {
+        if (produits.isEmpty()) {
             throw new RuntimeException("Produit Assurance introuvable pour le nom : " + nomProduit);
+        } else if (produits.size() > 1) {
+            throw new RuntimeException("Plusieurs produits trouvés pour le nom : " + nomProduit);
         }
+
+        ProduitAssurance produitAssurance = produits.get(0);
 
         // Vérifier que le montant du sinistre ne dépasse pas la couverture
         if (montantSinistre.compareTo(produitAssurance.getCouverture()) > 0) {

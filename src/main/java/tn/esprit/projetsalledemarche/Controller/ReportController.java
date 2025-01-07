@@ -20,6 +20,7 @@ import tn.esprit.projetsalledemarche.Repository.ProduitAssuranceRepository;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -35,12 +36,20 @@ public class ReportController {
 
     @GetMapping("/pdf/{nomProduit}")
     public ResponseEntity<byte[]> generatePdfByProductName(@PathVariable String nomProduit) {
-        // Recherche du produit par nom
-        ProduitAssurance produitAssurance = produitAssuranceRepository.findByNomProduit(nomProduit);
-        if (produitAssurance == null) {
+        // Recherche des produits correspondant au nom
+        List<ProduitAssurance> produitsAssurance = produitAssuranceRepository.findByNomProduit(nomProduit);
+
+        if (produitsAssurance == null || produitsAssurance.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
+
+        if (produitsAssurance.size() > 1) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(("Plusieurs produits trouvés pour le nom : " + nomProduit).getBytes());
+        }
+
+        ProduitAssurance produitAssurance = produitsAssurance.get(0); // Utilisation du premier produit
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             // Création du document PDF
@@ -69,13 +78,14 @@ public class ReportController {
             productTable.addCell("Nom du Produit");
             productTable.addCell(produitAssurance.getNomProduit());
             productTable.addCell("Prime");
-            productTable.addCell(produitAssurance.getPrime().toString());
+            productTable.addCell(produitAssurance.getPrime() != null ? produitAssurance.getPrime().toString() : "N/A");
             productTable.addCell("Couverture");
-            productTable.addCell(produitAssurance.getCouverture().toString());
+            productTable.addCell(produitAssurance.getCouverture() != null ? produitAssurance.getCouverture().toString() : "N/A");
             productTable.addCell("Type d'Assurance");
-            productTable.addCell(produitAssurance.getAtype().toString());
+            productTable.addCell(produitAssurance.getAtype() != null ? produitAssurance.getAtype().toString() : "N/A");
+
             productTable.addCell("Profil ID");
-            productTable.addCell(String.valueOf(produitAssurance.getProfil().getId_Profil()));
+            productTable.addCell(produitAssurance.getProfil() != null ? String.valueOf(produitAssurance.getProfil().getId_Profil()) : "N/A");
             document.add(productTable);
 
             // Ajouter un espace
@@ -96,9 +106,9 @@ public class ReportController {
                 sinistresTable.addCell("Produit d'Assurance");
 
                 for (Sinistre sinistre : produitAssurance.getSinistres()) {
-                    sinistresTable.addCell(sinistre.getDateSinistre().toString());
-                    sinistresTable.addCell(sinistre.getMontantSinistre().toString());
-                    sinistresTable.addCell(sinistre.getEtatSinistre());
+                    sinistresTable.addCell(sinistre.getDateSinistre() != null ? sinistre.getDateSinistre().toString() : "N/A");
+                    sinistresTable.addCell(sinistre.getMontantSinistre() != null ? sinistre.getMontantSinistre().toString() : "N/A");
+                    sinistresTable.addCell(sinistre.getEtatSinistre() != null ? sinistre.getEtatSinistre() : "N/A");
                     sinistresTable.addCell(produitAssurance.getNomProduit());
                 }
                 document.add(sinistresTable);
@@ -129,7 +139,8 @@ public class ReportController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Erreur lors de la génération du PDF : " + e.getMessage()).getBytes());
         }
     }
 }

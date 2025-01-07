@@ -1,5 +1,6 @@
 package tn.esprit.projetsalledemarche.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class ModeleActuariel implements Serializable {
     // Relation avec ProduitAssurance
     @ManyToOne
     @JoinColumn(name = "idProduitAssurance", nullable = false)
+    @JsonBackReference
     private ProduitAssurance produitAssurance;
 }
 

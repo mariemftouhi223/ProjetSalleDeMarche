@@ -3,6 +3,7 @@ package tn.esprit.projetsalledemarche.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,6 +44,7 @@ public class ProduitAssurance implements  Serializable{
     private Set<Sinistre> sinistres;
 
     @OneToMany(mappedBy = "produitAssurance", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<ModeleActuariel> modelesActuariels;
 
 

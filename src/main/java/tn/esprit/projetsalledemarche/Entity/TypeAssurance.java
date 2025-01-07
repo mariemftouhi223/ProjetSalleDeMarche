@@ -1,5 +1,5 @@
 package tn.esprit.projetsalledemarche.Entity;
 
 public enum TypeAssurance {
-    Crypto,Obligations,Actions,Forex
+    CRYPTO,OBLIGATION,ACTIONS,FOREX
 }
